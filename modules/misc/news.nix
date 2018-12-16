@@ -6,6 +6,8 @@ let
 
   cfg = config.news;
 
+  hostPlatform = pkgs.stdenv.hostPlatform;
+
   entryModule = types.submodule ({ config, ... }: {
     options = {
       id = mkOption {
@@ -176,6 +178,7 @@ in
 
       {
         time = "2017-09-12T14:22:18+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.blueman-applet'.
         '';
@@ -183,6 +186,7 @@ in
 
       {
         time = "2017-09-13T11:30:22+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.compton'.
         '';
@@ -190,6 +194,7 @@ in
 
       {
         time = "2017-09-20T14:47:14+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.screen-locker'.
         '';
@@ -242,7 +247,7 @@ in
 
       {
         time = "2017-10-02T11:15:03+00:00";
-        condition = config.services.udiskie.enable;
+        condition = hostPlatform.isLinux && config.services.udiskie.enable;
         message = ''
           The udiskie service now defaults to automatically mounting
           new devices. Previous behavior was to not automatically
@@ -256,6 +261,7 @@ in
 
       {
         time = "2017-10-04T18:36:07+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'xsession.windowManager.xmonad'.
         '';
@@ -263,6 +269,7 @@ in
 
       {
         time = "2017-10-06T08:21:43+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new service is available: 'services.polybar'.
         '';
@@ -306,8 +313,11 @@ in
 
       {
         time = "2017-10-20T12:15:27+00:00";
-        condition = with config.systemd.user;
-          services != {} || sockets != {} || targets != {} || timers != {};
+        condition =
+          hostPlatform.isLinux
+          && (with config.systemd.user;
+            services != {} || sockets != {} || targets != {} || timers != {}
+          );
         message = ''
           Home Manager's interaction with systemd is now done using
           'systemctl' from Nixpkgs, not the 'systemctl' in '$PATH'.
@@ -392,6 +402,7 @@ in
 
       {
         time = "2017-10-31T11:46:07+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new window manager module is available: 'xsession.windowManager.i3'.
         '';
@@ -406,9 +417,11 @@ in
 
       {
         time = "2017-11-14T19:56:49+00:00";
-        condition = with config.xsession.windowManager; (
-          i3.enable && i3.config != null && i3.config.startup != []
-        );
+        condition =
+          hostPlatform.isLinux
+          && (with config.xsession.windowManager;
+            i3.enable && i3.config != null && i3.config.startup != []
+          );
         message = ''
           A new 'notification' option was added to
           xsession.windowManager.i3.startup submodule.
@@ -421,7 +434,7 @@ in
 
       {
         time = "2017-11-17T10:36:10+00:00";
-        condition = config.xsession.windowManager.i3.enable;
+        condition = hostPlatform.isLinux && config.xsession.windowManager.i3.enable;
         message = ''
           The i3 window manager module has been extended with the following options:
 
@@ -434,6 +447,7 @@ in
 
       {
         time = "2017-11-26T21:57:23+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           Two new modules are available:
 
@@ -443,6 +457,7 @@ in
 
       {
         time = "2017-12-07T22:23:11+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.parcellite'
         '';
@@ -450,7 +465,9 @@ in
 
       {
         time = "2017-12-11T17:23:12+00:00";
-        condition = config.home.activation ? reloadSystemD;
+        condition =
+          hostPlatform.isLinux
+          && config.home.activation ? reloadSystemD;
         message = ''
           The Boolean option 'systemd.user.startServices' is now
           available. When enabled the current naive systemd unit
@@ -469,6 +486,7 @@ in
 
       {
         time = "2018-02-03T10:00:00+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.stalonetray'
         '';
@@ -476,7 +494,7 @@ in
 
       {
         time = "2018-02-04T22:58:49+00:00";
-        condition = config.xsession.enable;
+        condition = hostPlatform.isLinux && config.xsession.enable;
         message = ''
           A new option 'xsession.pointerCursor' is now available. It
           allows specifying the pointer cursor theme and size. The
@@ -557,6 +575,7 @@ in
 
       {
         time = "2018-03-04T06:54:26+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.unclutter'
         '';
@@ -618,12 +637,14 @@ in
 
       {
         time = "2018-05-01T20:49:31+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.mbsync'.
         '';
       }
       {
         time = "2018-05-03T12:34:47+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.flameshot'.
         '';
@@ -631,6 +652,7 @@ in
 
       {
         time = "2018-05-18T18:34:15+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'qt'
 
@@ -641,6 +663,7 @@ in
 
       {
         time = "2018-06-05T01:36:45+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.kdeconnect'.
         '';
@@ -688,6 +711,7 @@ in
 
       {
         time = "2018-07-07T15:48:56+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'xsession.windowManager.awesome'.
         '';
@@ -695,6 +719,7 @@ in
 
       {
         time = "2018-07-18T20:14:11+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.mpd'.
         '';
@@ -702,6 +727,7 @@ in
 
       {
         time = "2018-07-31T13:33:39+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.status-notifier-watcher'.
         '';
@@ -723,7 +749,7 @@ in
 
       {
         time = "2018-08-18T19:03:42+00:00";
-        condition = config.services.gpg-agent.enable;
+        condition = hostPlatform.isLinux && config.services.gpg-agent.enable;
         message = ''
           A new option is available: 'services.gpg-agent.extraConfig'.
 
@@ -734,7 +760,7 @@ in
 
       {
         time = "2018-08-19T20:46:09+00:00";
-        condition = pkgs.stdenv.isLinux;
+        condition = hostPlatform.isLinux;
         message = ''
           A new modules is available: 'programs.chromium'.
         '';
@@ -749,6 +775,7 @@ in
 
       {
         time = "2018-08-21T20:13:50+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.pasystray'.
         '';
@@ -867,6 +894,7 @@ in
 
       {
         time = "2018-11-25T22:10:15+00:00";
+        condition = hostPlatform.isLinux;
         message = ''
           A new module is available: 'services.nextcloud-client'.
         '';

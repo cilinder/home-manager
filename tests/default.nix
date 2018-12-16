@@ -2,6 +2,8 @@
 
 let
 
+  lib = pkgs.lib;
+
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
@@ -13,11 +15,13 @@ in
 
 import nmt {
   inherit pkgs;
-  modules = import ../modules/modules.nix { inherit pkgs; lib = pkgs.lib; };
+  modules = import ../modules/modules.nix { inherit lib pkgs; };
   testedAttrPath = [ "home" "activationPackage" ];
   tests = {
     "git/with-most-options" = ./modules/programs/git.nix;
     "git/with-str-extra-config" = ./modules/programs/git-with-str-extra-config.nix;
+  }
+  // lib.optionalAttrs pkgs.hostPlatform.isLinux {
     xresources = ./modules/xresources.nix;
   };
 }
